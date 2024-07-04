@@ -1,14 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Home from './components/Home';
 import ReadingList from './components/ReadingList';
 import AddBookForm from './components/AddBookForm';
 
+const API_BASE_URL = 'http://127.0.0.1:5000/api'
+
 const App = () => {
   const [books, setBooks] = useState([]);
 
+  // バックエンドAPIからデータ取得
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/books`)
+    .then(response => response.json())
+    .then(data => setBooks(data));
+  }, []);
+
   const addBook = (book) => {
-    setBooks([...books, book]);
+    fetch(`${API_BASE_URL}/books`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(book)
+    })
+    .then(response => response.json())
+    .then(newBook => setBooks([...books, newBook]));
   };
 
   return (
