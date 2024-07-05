@@ -28,6 +28,13 @@ const App = () => {
     .then(newBook => setBooks([...books, newBook]));
   };
 
+  const deleteBook = (bookId) => {
+    fetch(`${API_BASE_URL}/books/${bookId}`, {
+      method: 'DELETE'
+    })
+    .then(() => setBooks(books.filter(book => book.id !== bookId)));
+  };
+
   return (
     <Router>
       <div>
@@ -47,7 +54,7 @@ const App = () => {
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/reading-list" element={<ReadingList books={books} />} />
+          <Route path="/reading-list" element={<ReadingList books={books} deleteBook={deleteBook} />} />
           <Route path="/add-book" element={<AddBookForm addBook={addBook} />} />
         </Routes>
       </div>
